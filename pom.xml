@@ -15,4 +15,12 @@
         <version>2.2.2.RELEASE</version>
     </parent>
 
+    <!--web stater-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
