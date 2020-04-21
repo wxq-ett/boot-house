@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加房源</title>
+    <link th:href="@{/lib/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        body {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h2>添加页面</h2>
+    <form th:action="@{/house/add}" method="post"
+          enctype="multipart/form-data"
+          id="addForm"
+          class="form-horizontal" role="form">
+        <!--1.省-->
+        <div class="form-group">
+            <label for="province" class="col-sm-2 control-label">所在省</label>
+            <div class="col-sm-3 input-group">
+                <select class="form-control" id="province" name="province">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <!--2.市-->
+        <div class="form-group">
+            <label for="city" class="col-sm-2 control-label">所在市</label>
+            <div class="col-sm-3" input-group>
+                <select class="form-control" id="city" name="city">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+
+        <!--3.区-->
+        <div class="form-group">
+            <label for="area" class="col-sm-2 control-label">所在区县</label>
+            <div class="col-sm-3" input-group>
+                <select class="form-control" id="area" name="area">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <!--4.租赁方式-->
+        <div class="form-group">
+            <label for="rent_mode" class="col-sm-2 control-label">租赁方式</label>
+            <div class="col-sm-3" input-group>
+                <select class="form-control" id="rent_mode" name="rentMode">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+
+        <!--5.朝向-->
+        <div class="form-group">
+            <label for="orientation" class="col-sm-2 control-label">朝向</label>
+            <div class="col-sm-3" input-group>
+                <select class="form-control" id="orientation" name="orientation">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+
+        <!--6.户型-->
+        <div class="form-group">
+            <label for="house_type" class="col-sm-2 control-label">户型</label>
+            <div class="col-sm-3" input-group>
+                <select class="form-control" id="house_type" name="houseType">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <!--7.租金-->
+        <div class="form-group">
+            <label for="rental" class="col-sm-2 control-label">租金</label>
+            <div class="col-sm-3" input-group>
+                <input type="number" name="rental" id="rental" class="form-control">
+            </div>
+        </div>
+        <!--8.地址-->
+        <div class="form-group" input-group>
+            <label for="address" class="col-sm-2 control-label">地址</label>
+            <div class="col-sm-3">
+                <input type="text" name="address" id="address" class="form-control" placeholder="详细地址">
+            </div>
+        </div>
+
+        <!--9.图片-->
+        <div class="form-group" input-group>
+            <label for="address" class="col-sm-2 control-label" >图片</label>
+            <div class="col-sm-3">
+                <input type="file" name="file" id="file" class="form-control">
+            </div>
+        </div>
+
+        <!--10.添加按钮-->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-3">
+                <button type="submit" class="btn btn-primary">添加</button>
+            </div>
+        </div>
+    </form>
+
+    <script th:src="@{/lib/js/jquery/jquery.min.js}"></script>
+    <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/lib/js/jquery/validate/jquery.validate.min.js}"></script>
+    <script th:src="@{/lib/js/jquery/validate/messages_zh.min.js}"></script>
+    <script th:inline="javascript">
+        const path = [[${#request.getContextPath()}]];
+
+        const emptyOption = "<option value=''>--请选择--</option>";
+
+        $(function () {
+            //加载省
+            House.queryArea('province');
+
+            $('#province').change(function () {
+
+                //切换省的时候,将市和区县的下拉框重置
+                $('#city').html(emptyOption);
+                $('#area').html(emptyOption);
+
+                //拿到下拉框的value值
+                if(this.value){
+                    House.queryArea('city',this.value);
+                }
+
+            });
+            //给市的下拉框添加change事件
+            $('#city').change(function () {
+                $('#area').html(emptyOption);
+                if(this.value){
+                    House.queryArea('area',this.value);
+                }
+            });
+
+            //加载租赁方式 朝向和户型的字典数据
+            House.queryDict('rent_mode');
+            House.queryDict('orientation');
+            House.queryDict('house_type');
+            //加载校验方法
+            House.validateForm();
+
+        });
+
+        let House = {
+            //查询省市级联
+            queryArea: function(documentId,pid){
+                //如果不传pid,则默认为0,也就是查询省级的数据
+                pid = pid || 0;
+                $.ajax({
+                    url: path + "/area/queryByPid",
+                    type: 'GET',
+                    data: 'pid=' + pid,
+                    dataType: 'json',
+                    success: function (res) {
+                        //res是一个数组
+                        let options = "<option value=''>--请选择--</option>";
+                        for(let area of res){
+                            options += "<option value='" + area.id + "'>"
+                                + area.name
+                                "</option>";
+                        }
+                        //给省市区的下拉框赋值
+                        $("#" + documentId).html(options);
+                    }
+                });
+            },
+            //查询租赁方式 户型和朝向
+            queryDict: function (groupId) {
+                $.ajax({
+                   url: path + '/dict/' + groupId,
+                   type: 'GET',
+                   data: '',
+                   dataType: 'json',
+                   success: function (res) {
+                       let options = "<option value=''>--请选择--</option>";
+                        $.each(res,function (index, dict) {
+                            options += "<option value='" + dict.value + "'>"
+                                + dict.name
+                                "</option>"
+                        });
+                        //为租赁方式,户型和朝向的下拉框赋值
+                       $('#' + groupId).html(options);
+
+                   }
+                });
+            },
+
+            //校验表单项
+            validateForm: function () {
+                $('#addForm').validate({
+                    //校验成功后,可以在这定义表单提交方式,如使用ajax提交,即使debug设置成了false,也可以提交
+
+                    debug: false,
+                    /*submitHandler: function(form){
+                        alert('校验成功')
+                    },*/
+
+                    //修改提示信息的元素类型,默认是<label>,这修改成div
+                    errorElement: 'div',
+
+                    errorPlacement: function(errorEle,validateEle){
+                        errorEle.addClass('input-group-addon');
+                        //将错误信息与阿奴追加到被校验元素的父元素上
+                        errorEle.appendTo(validateEle.parent());
+                    },
+                    //校验成功后执行
+                    success: function(msgElement){
+                        msgElement.addClass('input-group-addon').text('OK');
+                    },
+                    //校验规则
+                    rules: {
+                        province: 'required',//对name属性为province的表单项进行校验
+
+                        address: {
+                            required: true,//住址必填
+                            maxlength: 10 //不能超过10个字符
+                        }
+                    },
+                    //校验失败后的消息
+                    messages: {
+                        province: '必填项',
+
+                        address:{
+                            required: '必填项',
+                            maxlength: '10个字符以内'
+                        }
+                    },
+                })
+            }
+        };
+    </script>
+
+</body>
+</html>
