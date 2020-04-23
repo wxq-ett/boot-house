@@ -8,6 +8,5 @@ public interface HouseService {
     //添加房源
     int addHouse(House house);
     //房源列表查询
-    Page<HouseVo> queryList(int pageNum, int pageSize, HouseVo houseVo);
-
+    Page<HouseVo> queryList(int pageNum, int pageSize, HouseVo houseVo, String[] rentalList);
 }

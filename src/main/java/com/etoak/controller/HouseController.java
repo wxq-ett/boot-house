@@ -44,8 +44,7 @@ public class HouseController {
 
     /*第二种方式*/
     @PostMapping("/add")
-    public String add(@RequestParam("file")MultipartFile file, @Valid House house,
-                      BindingResult bingResult) throws IOException,IllegalStateException {
+    public String add(@RequestParam("file")MultipartFile file, House house) throws IOException,IllegalStateException {
         //校验参数
         ValidationUtil.validate(house);
 
@@ -97,18 +96,22 @@ public class HouseController {
 
     }
 
+    //房源列表查询
     @GetMapping(value = "/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public Page<HouseVo> queryList(@RequestParam(required = false,defaultValue = "1") int pageNum,
                                  @RequestParam(required = false,defaultValue = "10") int pageSize,
-                                 HouseVo houseVo){
-        log.info("pageNum - {},pageSize - {},houseVo - {}",pageNum,pageSize,houseVo);
-        return houseService.queryList(pageNum,pageSize,houseVo);
-
-
+                                 HouseVo houseVo,
+                                   @RequestParam(value = "rentalList[]", required = false) String[] rentalList) {
+        log.info("pageNum - {},pageSize - {},houseVo - {},rentalList- {}",pageNum,pageSize,houseVo,rentalList);
+        return houseService.queryList(pageNum,pageSize,houseVo,rentalList);
 
     }
-
+    //跳转到列表页面
+    @GetMapping("/toList")
+    public String toList(){
+        return "house/list";
+    }
 
 
 
