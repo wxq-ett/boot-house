@@ -12,4 +12,5 @@ public interface HouseMapper {
     //房源列表查询
     List<HouseVo> queryList(House house);
 
+    int updateHouse(House house);
 }

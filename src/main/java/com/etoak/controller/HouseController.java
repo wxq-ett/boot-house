@@ -102,7 +102,7 @@ public class HouseController {
     public Page<HouseVo> queryList(@RequestParam(required = false,defaultValue = "1") int pageNum,
                                  @RequestParam(required = false,defaultValue = "10") int pageSize,
                                  HouseVo houseVo,
-                                   @RequestParam(value = "rentalList[]", required = false) String[] rentalList) {
+                                 @RequestParam(value = "rentalList[]", required = false) String[] rentalList) {
         log.info("pageNum - {},pageSize - {},houseVo - {},rentalList- {}",pageNum,pageSize,houseVo,rentalList);
         return houseService.queryList(pageNum,pageSize,houseVo,rentalList);
 
@@ -114,6 +114,12 @@ public class HouseController {
     }
 
 
+    @PutMapping("/update")
+    public String update(House house){
+        log.info("house - {}",house);
+        houseService.updateHouse(house);
+        return  "redirect:/house/toList";
+    }
 
 
 

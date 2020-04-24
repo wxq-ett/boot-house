@@ -9,4 +9,6 @@ public interface HouseService {
     int addHouse(House house);
     //房源列表查询
     Page<HouseVo> queryList(int pageNum, int pageSize, HouseVo houseVo, String[] rentalList);
+    //更新房源
+    int updateHouse(House house);
 }
