@@ -11,5 +11,11 @@ public class User {
     private String gender;
     private Integer age;
     private String birthday;
+    //注册邮箱
+    private String email;
+    //用户状态
+    private Integer state;
+
+
 
 }

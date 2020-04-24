@@ -11,4 +11,6 @@ public interface HouseService {
     Page<HouseVo> queryList(int pageNum, int pageSize, HouseVo houseVo, String[] rentalList);
     //更新房源
     int updateHouse(House house);
+    //根据id刪除房源
+    int deleteById(int id);
 }

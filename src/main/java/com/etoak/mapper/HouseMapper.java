@@ -13,4 +13,6 @@ public interface HouseMapper {
     List<HouseVo> queryList(House house);
 
     int updateHouse(House house);
+    //根據id刪除房源
+    int deleteById(int id);
 }

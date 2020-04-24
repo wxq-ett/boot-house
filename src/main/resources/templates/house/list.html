@@ -211,14 +211,14 @@
                     </div>
                 </form>
             </div>
-            <!--<div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="submit" class="btn btn-primary">更新</button>
-            </div>-->
         </div>
     </div>
 </div>
 
+<!--房源刪除-->
+<form method="post" id="delForm">
+    <input type="hidden" name="_method" value="delete">
+</form>
 
 <script th:src="@{/lib/js/jquery/jquery.min.js}" type="text/javascript"></script>
 <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
@@ -266,14 +266,14 @@
         house.queryUpdateModalDict('orientation');
 
         $('#update_province').change(function () {
-            $('#city').html(areaOption);
-            $('#area').html(areaOption);
+            $('#update_city').html(areaOption);
+            $('#update_area').html(areaOption);
             if(this.value){
                 house.queryArea('update_city',this.value);
             }
         });
         $('#update_city').change(function () {
-            $('#area').html(areaOption);
+            $('#update_area').html(areaOption);
             if(this.value){
                 house.queryArea('update_area',this.value);
             }
@@ -347,7 +347,9 @@
                     },
                     {title: '操作',formatter(value,row,index){
                             let updateBtn = "<button id='updateBtn' class='btn btn-primary' type='button'  data-toggle='modal' data-target='#myModal'>更新</button>";
-                            return updateBtn;
+                            let deleteBtn = "<button id='deleteBtn' class='btn btn-danger' type='button'>刪除</button>"
+
+                            return updateBtn + "" + deleteBtn;
                         },
                         events: houseEvent  //window事件
 
@@ -461,7 +463,13 @@
             $('#update_rental').val(row.rental);
             $('#update_address').val(row.address);
 
+        },
+        'click #deleteBtn': function (event,value,row,index) {
+            let action = path + '/house/' + row.id;
 
+            if(confirm('确认要删除吗?')){
+                $('#delForm').attr('action',action).submit();
+            }
         }
     }
 

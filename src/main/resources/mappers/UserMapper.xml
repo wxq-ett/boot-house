@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etoak.mapper.UserMapper">
+
+    <!--useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+    将自增的主键id返回给参数类型User的id属性上-->
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO t_boot_user(
+            name,
+            password,
+            email,
+            age,
+            gender,
+            birthday
+        ) VALUES (
+            #{name},
+            #{password},
+            #{email},
+            #{age},
+            #{gender},
+            NOW()
+        )
+
+
+    </insert>
+
+</mapper>
