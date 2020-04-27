@@ -1,4 +1,4 @@
-package com.etoak.controller;
+package com.etoak.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 import javax.jms.DeliveryMode;
 import javax.jms.Session;
 
-@Configuration
+//@Configuration
 public class ActiveMQConfig {
     /*
     * 1 ActiveMQConnectionFactory.
